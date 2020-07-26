@@ -41,11 +41,11 @@
     "**/*.map": true,
 
     // Laravel
-    "vendor/": true,
+    // "vendor/": true,
     "bootstrap/": true,
     "storage/": true,
     // "tests/": true,
-    "_ide_helper.php": true,
+    // "_ide_helper.php": true,
     ".phpstorm.meta.php": true,
     "artisan": true,
     "server.php": true,
