@@ -21,8 +21,8 @@ class CreateProductsTable extends Migration
             $table->string('image')->nullable();
             $table->decimal('price', 14, 4)->default(0.0000);
             $table->unsignedInteger('discount')->default(0);
-            $table->unsignedInteger('stock')->default(0);
             // $table->decimal('discount', 3, 2)->default(0.00); // price / discount -> 116 / 1.16 * 0.16
+            $table->unsignedInteger('stock')->default(0);
             $table->unsignedTinyInteger('is_active')->default(1);
 
             $table->unique(['name'], 'uk_products_name');

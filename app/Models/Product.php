@@ -14,4 +14,12 @@ class Product extends Model
         'price',
         'is_active',
     ];
+
+    /**
+     * Get the reviews for the products.
+     */
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
 }
