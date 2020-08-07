@@ -63,7 +63,9 @@
     "start:project": [
       "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
       "@php artisan key:generate",
-      "@php artisan storage:link"
+      "@php artisan storage:link",
+      "@php artisan migrate:fresh --seed",
+      "@php artisan passport:install"
     ],
     "uptodate": [
       "@composer update",
