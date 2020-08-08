@@ -26,7 +26,8 @@
   "config": {
     "optimize-autoloader": true,
     "preferred-install": "dist",
-    "sort-packages": true
+    "sort-packages": true,
+    "process-timeout": 300
   },
   "extra": {
     "laravel": {

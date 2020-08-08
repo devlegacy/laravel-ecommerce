@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class ProductSeeder extends Seeder
+class ReviewTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,6 +11,6 @@ class ProductSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Models\Product::class, 50)->create();
+        factory(App\Models\Review::class, 300)->create();
     }
 }

@@ -19,15 +19,18 @@ class CreateProductsTable extends Migration
             $table->string('name', 100);
             $table->text('description')->nullable();
             $table->string('image')->nullable();
-            $table->decimal('price', 14, 4)->default(0.0000);
-            $table->unsignedInteger('discount')->default(0);
-            // $table->decimal('discount', 3, 2)->default(0.00); // price / discount -> 116 / 1.16 * 0.16
+            $table->unsignedDecimal('price', 10, 4)->default(0.0000);
+            $table->tinyInteger('percentage_discount'); // 00-99
             $table->unsignedInteger('stock')->default(0);
-            $table->unsignedTinyInteger('is_active')->default(1);
+            $table->tinyInteger('is_active');
 
             $table->unique(['name'], 'uk_products_name');
-            $table->nullableTimestamps();
+            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
         });
+
+        DB::statement('ALTER TABLE `products` MODIFY COLUMN `percentage_discount` TINYINT(2) UNSIGNED NOT NULL DEFAULT 0');
+        DB::statement('ALTER TABLE `products` MODIFY COLUMN `is_active` TINYINT(1) UNSIGNED NOT NULL DEFAULT 1');
     }
 
     /**

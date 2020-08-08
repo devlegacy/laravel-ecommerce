@@ -5,11 +5,18 @@ namespace App\Http\Controllers\Api;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProductRequest;
+use Symfony\Component\HttpFoundation\Response;
 use App\Http\Resources\Product\ProductResource;
 use App\Http\Resources\Product\ProductCollection;
 
 class ProductController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api')->except(['index', 'show']);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -29,11 +36,11 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
         $product = Product::create($request->all());
 
-        return new ProductResource($product);
+        return response(['data' => new ProductResource($product)], Response::HTTP_CREATED);
     }
 
     /**
@@ -58,7 +65,7 @@ class ProductController extends Controller
     {
         $product->update($request->all());
 
-        return $product;
+        return response(['data' => new ProductResource($product)], Response::HTTP_CREATED);
     }
 
     /**
@@ -71,5 +78,8 @@ class ProductController extends Controller
     {
         $product->is_active = false;
         $product->save();
+        // $product->destroy();
+
+        response(null, Response::HTTP_NO_CONTENT);
     }
 }
