@@ -30,8 +30,9 @@ class CreateProductsTable extends Migration
             $table->tinyInteger('is_active')->default(1);
 
             $table->unique(['name'], 'uk_products_name');
-            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
+
+            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))->nullable();
+            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))->nullable();
         });
 
         DB::statement('ALTER TABLE `products` MODIFY COLUMN `vat_rate` TINYINT(2) UNSIGNED NOT NULL DEFAULT 16');
