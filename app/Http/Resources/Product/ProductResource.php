@@ -14,11 +14,11 @@ class ProductResource extends JsonResource
      */
     public function toArray($request)
     {
-        $price = (float) $this->price; // total
-        $discountPrice = (float) $this->discount_price; // Real price
-        $discount = (float) $this->discount;
-        $subTotal = (float) $this->sub_total;
-        $vat = (float) $this->vat;
+        $price = $this->price; // total
+        $discountPrice = $this->discount_price; // Real price
+        $discount = $this->discount;
+        $subTotal = $this->sub_total;
+        $vat = $this->vat;
 
         $decimalDiscount = (float) bcdiv($this->discount_rate, 100, 2);
         $decimalVAT = (float) bcdiv($this->vat_rate, 100, 2);
@@ -29,29 +29,31 @@ class ProductResource extends JsonResource
 
         return [
             'id'          => $this->id,
+            'category'    => $this->category->name,
             'name'        => $this->name,
-            'description' => $this->when($isProductShow, $this->description),
+            'description' => $this->description,
             'prices'      => [
                 'subTotal' => $subTotal,
-                'discount' => (float) $discountPrice,
-                'total'    => $this->when($isProductShow, $price),
+                'discount' => $discountPrice,
+                'total'    => $price,
             ],
             'taxes' => [
                 'vat' => [ // iva
                     'rate'   => $decimalVAT,
-                    'amount' => $this->when($isProductShow, $vat), // impuesto $0.0 pesos | importe
+                    'amount' => $vat, // impuesto $0.0 pesos | importe
                 ],
             ],
             'discount'           => [
-                'rate'   => $this->when($isProductShow, $decimalDiscount),
-                'amount' => $this->when($isProductShow, $discount),  // ahorras $0.0 pesos | importe
+                'rate'   => $decimalDiscount,
+                'amount' => $discount,  // ahorras $0.0 pesos | importe
             ],
-            'stock'              => $this->when($isProductShow, $this->stock === 0 ? 'Out of stock' : $this->stock),
-            'image'              => $this->when($isProductShow, $this->image),
+            'stock'              => $this->stock === 0 ? 'Out of stock' : $this->stock,
+            'image'              => $this->image,
             'rating'             => $this->reviews->count() > 0 ? bcdiv($this->reviews->sum('stars'), $this->reviews->count(), 2) : 'No rating yet',
+            'isActive'           => $this->is_active,
             'href'               => [
-                'reviews' => $this->when($reviews, route('reviews.index', $this->id)),
-                'link'    => $this->when($isProductIndex, route('products.show', $this->id)),
+                'reviews' => route('reviews.index', $this->id),
+                'link'    => route('products.show', $this->id),
             ],
         ];
     }

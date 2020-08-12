@@ -15,15 +15,15 @@ class ProductObserver
     public function saving(Product $product)
     {
         // Calculate discount price
-        $price = (float) $product->price;
-        $percentageDiscount = (float) $product->discount_rate;
+        $price = $product->price;
+        $percentageDiscount = $product->discount_rate;
         $decimalDiscount = bcdiv($percentageDiscount, 100, 2);
-        $discountPrice = (float) bcmul(bcsub(1, $decimalDiscount, 2), $price, 4);
-        $discount = (float) bcsub($price, $discountPrice, 4);
+        $discountPrice = bcmul(bcsub(1, $decimalDiscount, 2), $price, 4);
+        $discount = bcsub($price, $discountPrice, 4);
 
-        $decimalVAT = (float) bcdiv($product->vat_rate, 100, 2);
-        $subTotal = (float) bcdiv($discountPrice, bcadd(1, $decimalVAT, 2), 4);
-        $vat = (float) bcsub($discountPrice, $subTotal, 4);
+        $decimalVAT = bcdiv($product->vat_rate, 100, 2);
+        $subTotal = bcdiv($discountPrice, bcadd(1, $decimalVAT, 2), 4);
+        $vat = bcsub($discountPrice, $subTotal, 4);
 
         $product->discount_price = $discountPrice;
         $product->discount = $discount;

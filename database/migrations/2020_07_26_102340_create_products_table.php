@@ -16,6 +16,7 @@ class CreateProductsTable extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->bigIncrements('id');
+            $table->bigInteger('category_id')->unsigned();
             $table->string('name', 100);
             $table->text('description')->nullable();
             $table->string('image')->nullable();
