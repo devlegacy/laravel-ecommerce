@@ -16,7 +16,7 @@ class CreateProductsTable extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->bigIncrements('id');
-            $table->bigInteger('category_id')->unsigned();
+            $table->unsignedBigInteger('category_id');
             $table->string('name', 100);
             $table->text('description')->nullable();
             $table->string('image')->nullable();
@@ -29,11 +29,17 @@ class CreateProductsTable extends Migration
             $table->tinyInteger('vat_rate')->default(16); // 0-99
             $table->unsignedInteger('stock')->default(0);
             $table->tinyInteger('is_active')->default(1);
-
-            $table->unique(['name'], 'uk_products_name');
-
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))->nullable();
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))->nullable();
+
+            $table->index(['category_id'], 'ik_products_to_categories');
+
+            $table->unique(['name', 'category_id'], 'uk_products_name');
+
+            $table->foreign('category_id', 'fk_products_to_categories')
+                ->references('id')
+                ->on('categories')
+                ->onDelete('cascade')->onUpdate('cascade');
         });
 
         DB::statement('ALTER TABLE `products` MODIFY COLUMN `vat_rate` TINYINT(2) UNSIGNED NOT NULL DEFAULT 16');
