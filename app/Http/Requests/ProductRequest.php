@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ProductRequest extends FormRequest
@@ -23,13 +24,23 @@ class ProductRequest extends FormRequest
      */
     public function rules()
     {
+        $categoryId = request()->input('category_id');
+        $nameRules = [
+            'required',
+            'max:100',
+            Rule::unique('products', 'name')->where(fn ($query) => $query->where('category_id', $categoryId)),
+        ];
+
         return [
-            'name' => 'required|max:255|unique:products',
-            // TODO: Change detail for description
-            'detail'   => 'required',
-            'price'    => 'required',
-            'stock'    => 'required|max:6',
-            'discount' => 'required|max:2',
+            'category_id'   => 'required|exists:categories,id',
+            'name'          => $nameRules,
+            'description',
+            'image',
+            'barcode',
+            'price'         => 'required',
+            'discount_rate',
+            'vat_rate',
+            'stock',
         ];
     }
 }

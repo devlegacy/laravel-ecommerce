@@ -20,6 +20,7 @@ class CreateProductsTable extends Migration
             $table->string('name', 100);
             $table->text('description')->nullable();
             $table->string('image')->nullable();
+            $table->string('barcode')->nullable();
             $table->unsignedDecimal('price', 10, 4)->default(0.0000);
             $table->unsignedDecimal('discount', 10, 4)->default(0.0000);
             $table->unsignedDecimal('discount_price', 10, 4)->default(0.0000);
@@ -32,7 +33,7 @@ class CreateProductsTable extends Migration
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))->nullable();
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))->nullable();
 
-            $table->index(['category_id'], 'ik_products_to_categories');
+            $table->index(['category_id'], 'ik_products_category_id');
 
             $table->unique(['name', 'category_id'], 'uk_products_name');
 
