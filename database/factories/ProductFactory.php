@@ -9,6 +9,7 @@ use Faker\Generator as Faker;
 $factory->define(Product::class, function (Faker $faker) {
     return [
         'category_id'         => fn () => Category::all()->random(),
+        'barcode'             => $faker->unique()->ean13,
         'name'                => $faker->unique()->word(),
         'description'         => $faker->paragraph(),
         'image'               => $faker->imageUrl($width = 640, $height = 480, 'cats'),

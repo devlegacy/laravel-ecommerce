@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Product;
 
+use Picqer\Barcode\BarcodeGeneratorSVG;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProductResource extends JsonResource
@@ -27,9 +28,12 @@ class ProductResource extends JsonResource
         $isProductShow = request()->routeIs('products.show');
         $isProductIndex = request()->routeIs('products.index');
 
+        $barcodeGeneratorSVG = new BarcodeGeneratorSVG();
+
         return [
             'id'          => $this->id,
             'category'    => $this->category->name,
+            'barcode'     => $this->barcode,
             'name'        => $this->name,
             'description' => $this->description,
             'prices'      => [
@@ -47,11 +51,11 @@ class ProductResource extends JsonResource
                 'rate'   => $decimalDiscount,
                 'amount' => $discount,  // ahorras $0.0 pesos | importe
             ],
-            'stock'              => $this->stock === 0 ? 'Out of stock' : $this->stock,
-            'image'              => $this->image,
-            'rating'             => $this->reviews->count() > 0 ? bcdiv($this->reviews->sum('stars'), $this->reviews->count(), 2) : 'No rating yet',
-            'isActive'           => $this->is_active,
-            'href'               => [
+            'stock'               => $this->stock === 0 ? 'Out of stock' : $this->stock,
+            'images'              => ['product' => $this->image, 'barcode' => $barcodeGeneratorSVG->getBarcode($this->barcode, BarcodeGeneratorSVG::TYPE_EAN_13)],
+            'rating'              => $this->reviews->count() > 0 ? bcdiv($this->reviews->sum('stars'), $this->reviews->count(), 2) : 'No rating yet',
+            'isActive'            => $this->is_active,
+            'href'                => [
                 'reviews' => route('reviews.index', $this->id),
                 'link'    => route('products.show', $this->id),
             ],
