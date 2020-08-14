@@ -25,11 +25,18 @@ class CategoryRequest extends FormRequest
     public function rules()
     {
         $category = $this->route('category');
-        $unique = request()->routeIs('categories.update') ? Rule::unique('categories')->ignore($category->id) : Rule::unique('categories');
+
+        $categoryNameStoreRule = request()->routeIs('categories.store')
+            ? ['required']
+            : [];
+        $categoryNameUpdateRule = request()->routeIs('categories.update')
+            ? Rule::unique('categories')->ignore($category->id)
+            : Rule::unique('categories');
 
         return [
-            'name'        => ['string', 'required', $unique],
+            'name'        => ['string', ...$categoryNameStoreRule, $categoryNameUpdateRule],
             'description' => 'string',
+            'is_active'   => 'boolean',
         ];
     }
 }

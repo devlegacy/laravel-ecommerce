@@ -23,11 +23,12 @@ class CategoryController extends Controller
         $isActive = request()->input('is_active', 'all');
 
         if ($isActive === 'all') {
-            $categories = Category::paginate($paginate)->appends(request()->input());
+            $categories = Category::paginate($paginate);
         } else {
-            $isActive = $isActive === 'true' ? true : false;
-            $categories = Category::where('is_active', $isActive)->paginate($paginate)->appends(request()->input());
+            $isActive = $isActive === 'true';
+            $categories = Category::where('is_active', $isActive)->paginate($paginate);
         }
+        $categories->appends(request()->input());
 
         return new CategoryCollection($categories);
     }
