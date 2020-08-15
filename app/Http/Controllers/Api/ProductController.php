@@ -6,6 +6,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Resources\Product\ProductResource;
 use App\Http\Resources\Product\ProductCollection;
@@ -38,7 +39,10 @@ class ProductController extends Controller
      */
     public function store(ProductRequest $request)
     {
-        $product = Product::create($request->all());
+        $path = $request->file('image')->store('products');
+        $request->merge(['image' => Storage::url($path)]);
+
+        $product = Product::create($request->input());
 
         return response(['data' => new ProductResource($product)], Response::HTTP_CREATED);
     }

@@ -21,6 +21,7 @@ class CreateProductsTable extends Migration
             $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->string('barcode')->nullable();
+            $table->text('barcode_svg')->nullable();
             $table->unsignedDecimal('price', 10, 4)->default(0.0000);
             $table->unsignedDecimal('discount', 10, 4)->default(0.0000);
             $table->unsignedDecimal('discount_price', 10, 4)->default(0.0000);

@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Product;
+use Picqer\Barcode\BarcodeGeneratorSVG;
 
 class ProductObserver
 {
@@ -14,6 +15,11 @@ class ProductObserver
      */
     public function saving(Product $product)
     {
+        if (! empty($product->barcode)) {
+            $barcodeGeneratorSVG = new BarcodeGeneratorSVG();
+            $product->barcode_svg = $barcodeGeneratorSVG->getBarcode($product->barcode, BarcodeGeneratorSVG::TYPE_EAN_13);
+        }
+
         // Calculate discount price
         $price = $product->price;
         $percentageDiscount = $product->discount_rate;

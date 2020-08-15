@@ -5,11 +5,16 @@
 use App\Models\Product;
 use App\Models\Category;
 use Faker\Generator as Faker;
+use Picqer\Barcode\BarcodeGeneratorSVG;
 
 $factory->define(Product::class, function (Faker $faker) {
+    $barcode = $faker->unique()->ean13;
+    $barcodeGeneratorSVG = new BarcodeGeneratorSVG();
+
     return [
         'category_id'         => fn () => Category::all()->random(),
-        'barcode'             => $faker->unique()->ean13,
+        'barcode'             => $barcode,
+        'barcode_svg'         => $barcodeGeneratorSVG->getBarcode($barcode, BarcodeGeneratorSVG::TYPE_EAN_13),
         'name'                => $faker->unique()->word(),
         'description'         => $faker->paragraph(),
         'image'               => $faker->imageUrl($width = 640, $height = 480, 'cats'),

@@ -25,18 +25,16 @@ class ProductRequest extends FormRequest
     public function rules()
     {
         $categoryId = request()->input('category_id');
-        $nameRules = [
-            'required',
-            'max:100',
-            Rule::unique('products', 'name')->where(fn ($query) => $query->where('category_id', $categoryId)),
-        ];
+        $productNameStoreRule = request()->routeIs('products.store')
+        ? ['required', Rule::unique('products', 'name')->where(fn ($query) => $query->where('category_id', $categoryId)), ]
+        : [];
 
         return [
             'category_id'   => 'required|exists:categories,id',
-            'name'          => $nameRules,
+            'name'          => [...$productNameStoreRule, 'max:100', ],
             'description',
             'image',
-            'barcode',
+            'barcode'       => 'sometimes|unique:products,barcode',
             'price'         => 'required',
             'discount_rate',
             'vat_rate',

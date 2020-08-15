@@ -52,7 +52,7 @@ class ProductResource extends JsonResource
                 'amount' => $discount,  // ahorras $0.0 pesos | importe
             ],
             'stock'               => $this->stock === 0 ? 'Out of stock' : $this->stock,
-            'images'              => ['product' => $this->image, 'barcode' => $barcodeGeneratorSVG->getBarcode($this->barcode, BarcodeGeneratorSVG::TYPE_EAN_13)],
+            'images'              => ['product' => $this->image, 'barcode' => $this->barcode_svg],
             'rating'              => $this->reviews->count() > 0 ? bcdiv($this->reviews->sum('stars'), $this->reviews->count(), 2) : 'No rating yet',
             'isActive'            => $this->is_active,
             'href'                => [
