@@ -33,12 +33,12 @@ class ProductRequest extends FormRequest
             'category_id'   => 'required|exists:categories,id',
             'name'          => [...$productNameStoreRule, 'max:100', ],
             'description',
-            'image',
-            'barcode'       => 'sometimes|unique:products,barcode',
-            'price'         => 'required',
-            'discount_rate',
-            'vat_rate',
-            'stock',
+            'image'         => 'image',
+            'barcode'       => 'sometimes|unique:products,barcode|numeric',
+            'price'         => 'required|numeric|min:1',
+            'discount_rate' => 'numeric|min:0',
+            'vat_rate'      => 'numeric|min:0',
+            'stock'         => 'numeric|min:0',
         ];
     }
 }
