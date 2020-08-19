@@ -38,6 +38,7 @@ class ProductResource extends JsonResource
             'description' => $this->description,
             'prices'      => [
                 'subTotal' => $subTotal,
+                'unit'     => $discountPrice,
                 'discount' => $discountPrice,
                 'total'    => $price,
             ],

@@ -6,7 +6,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
-use Illuminate\Support\Facades\Storage;
+
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Resources\Product\ProductResource;
 use App\Http\Resources\Product\ProductCollection;
@@ -16,6 +16,7 @@ class ProductController extends Controller
     public function __construct()
     {
         // $this->middleware('auth:api')->except(['index', 'show']);
+        $this->middleware('upload.image')->only(['store']);
     }
 
     /**
@@ -25,8 +26,17 @@ class ProductController extends Controller
      */
     public function index()
     {
-        // ?is_active=true&paginate=25
-        $products = Product::where('is_active', true)->paginate(25);
+        // TODO: Filter by category
+        // ?is_active=true&paginate=25&category=1
+        $paginate = (int) request()->input('paginate', 25);
+        $isActive = request()->input('is_active', 'all');
+
+        if ($isActive === 'all') {
+            $products = Product::paginate($paginate);
+        } else {
+            $isActive = $isActive === 'true';
+            $products = Product::where('is_active', $isActive)->paginate($paginate);
+        }
 
         return new ProductCollection($products);
     }
@@ -39,9 +49,6 @@ class ProductController extends Controller
      */
     public function store(ProductRequest $request)
     {
-        $path = $request->file('image')->store('products');
-        $request->merge(['image' => Storage::url($path)]);
-
         $product = Product::create($request->input());
 
         return response(['data' => new ProductResource($product)], Response::HTTP_CREATED);
